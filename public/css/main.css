@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&family=Macondo&display=swap');
+
+@import url(./pages/home.css);
+@import url(./pages/mediaPages.css);
+
+:root {
+  --color-primary-p1: #C2EDDB;
+  --color-primary-p2: #ADD7C5;
+  --color-primary-p3: #92C6B0;
+  --color-primary-p4: #68A58B;
+  --color-primary-p5: #215E44;
+  --color-primary-p6: #104830;
+  --color-primary-p7: #053621;
+  --color-primary-p8: #022617;
+  --color-secundary-s1: #EDC9C2;
+  --color-secundary-s2: #DCADA4;
+  --color-secundary-s3: #C68E83;
+  --color-secundary-s4: #B5786C;
+  --color-secundary-s5: #A16256;
+  --color-secundary-s6: #945144;
+  --color-secundary-s7: #7E3F33;
+  --color-secundary-s8: #672D21;
+  --color-gray-g1: #FAFAFA;
+  --color-gray-g2: #BFCBC3;
+  --color-gray-g3: #8C958F;
+  --color-gray-g4: #646A66;
+  --color-gray-g5: #444A46;
+  --color-gray-g6: #303531;
+  --color-gray-g7: #242825;
+  --color-gray-g8: #000000;
+  --font-primary: 'Fira Sans';
+  --font-special: 'Macondo';
+  --header-1: 64px;
+  --header-2: 32px;
+  --header-3: 20px;
+  --paragraph: 16px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-primary);
+}
+
+body {
+  background-color: var(--color-primary-p2);
+}
+
+header {
+  user-select: none;
+}
+
+header .logo-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+  background-color: var(--color-primary-p7);
+}
+
+header .logo  {
+  background-color: var(--color-primary-p7);
+  height: 4rem;
+}
+
+header .nav-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background-color: var(--color-primary-p4);
+}
+
+header .nav-list {
+  display: flex;
+  list-style: none;
+  gap: 3rem;
+  padding: 0.5rem 0;
+  font-size: var(--header-2);
+}
+
+.nav-active {
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.nav-active:hover {
+  background-color: var(--color-primary-p1);
+}
+
+.nav-active.active {
+  background-color: var(--color-primary-p8);
+  color: var(--color-gray-g1);
+}
+
+.user-account {
+  display: flex;
+  align-items: center;
+  margin-right: 2rem;
+  visibility: hidden;
+  gap: 1rem;
+  justify-self: end;
+  font-size: var(--header-3);
+}
+
+.user-account .btn-logout {
+  all: unset;
+  background-color: var(--color-secundary-s8);
+  color: var(--color-gray-g1);
+  border: none;
+  padding: 5px 10px;
+  font-size: var(--header-3);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.user-account .btn-logout:hover {
+  background-color: var(--color-secundary-s7);
+}

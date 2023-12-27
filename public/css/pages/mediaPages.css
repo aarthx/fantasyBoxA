@@ -1,0 +1,39 @@
+
+.main-media {
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.main-media .btn-new-media {
+  all: unset;
+  background-color: var(--color-primary-p5);
+  color: var(--color-gray-g1);
+  font-size: var(--header-2);
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.main-media .btn-new-media:hover {
+  background-color: var(--color-primary-p6);
+}
+
+.main-media .mediaList {
+  display: flex;
+  gap: 2rem;
+}
+
+.modal .form.media .two-inputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.modal .form.media .label-input {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+}

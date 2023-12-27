@@ -1,0 +1,174 @@
+main.main-home {
+  width: 30%;
+  margin: 0 auto;
+  padding: 3rem 0;
+}
+
+main .home-text {
+  font-size: var(--header-2);
+  text-align: center;
+}
+
+main .start-btns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 3rem;
+}
+
+main .start-btns .btn {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: var(--header-2);
+  padding: 10px;
+  color: var(--color-gray-g1);
+}
+
+main .start-btns .btn.register {
+  background-color: var(--color-secundary-s8);
+}
+
+main .start-btns .btn.login {
+  background-color: var(--color-primary-p8);
+}
+
+main .start-btns .btn.register:hover {
+  background-color: var(--color-secundary-s6);
+  transition: 0.5s;
+}
+
+main .start-btns .btn.login:hover {
+  background-color: var(--color-primary-p6);
+  transition: 0.5s;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 1;
+}
+
+.modal {
+  position: fixed;
+  display: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--color-primary-p2);
+  z-index: 2;
+  border-radius: 10px;
+  width: 40%;
+}
+
+.modal-header {
+  position: relative;
+  border-radius: 5px 5px 0 0;
+  padding: 0.25rem;
+  font-size: var(--header-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--color-primary-p4);
+}
+
+.modal-header .btn-fechar-modal {
+  all: unset;
+  border-radius: 10px;
+  background-color: var(--color-gray-g1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  height: 2rem;
+  width: 2rem;
+  box-shadow: 0 4px 4px 0 #00000025;
+
+}
+
+.modal-header .btn-fechar-modal img {
+  width: 50%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.modal-header .btn-fechar-modal:hover {
+  background-color: var(--color-gray-g2);
+  box-shadow: none;
+}
+
+.modal .form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 80%;
+  padding: 3rem 0;
+  margin: 0 auto;
+  font-size: var(--header-3);
+}
+
+.modal .form label {
+  align-self: self-start;
+  text-align: left;
+}
+
+.modal .form input{
+  all: unset;
+  border-radius: 5px;
+  background-color: var(--color-gray-g1);
+  border: 3px solid var(--color-primary-p4);
+  width: 100%;
+  height: 2.5rem;
+  margin: 0.5rem 0 1rem 0;
+  padding: 0 0.25rem;
+}
+
+.modal .form input[type="date"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal .form textarea {
+  all: unset;
+  border-radius: 5px;
+  background-color: var(--color-gray-g1);
+  border: 3px solid var(--color-primary-p4);
+  width: 100%;
+  height: 5rem;
+  margin: 0.5rem 0 1rem 0;
+  padding: 0.5rem;
+  word-break: break-all;
+}
+
+.modal .form input:active {
+  border: 3px solid var(--color-primary-p5);
+}
+
+.modal .form .btn-submit {
+  all: unset;
+  cursor: pointer;
+  margin-top: 2rem;
+  align-self: flex-end;
+  border-radius: 5px;
+  font-size: var(--header-2);
+  background-color: var(--color-primary-p4);
+  padding: 0.5rem 1rem;
+}
+
+.modal .form .btn-submit:hover {
+  box-shadow: inset 0 0 0px 3px var(--color-primary-p6);
+  transition: 0.5s;
+}
+
+.error-message {
+  font-size: 1rem;
+  color: red;
+  display: none; 
+}

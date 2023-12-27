@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fantasy Box</title>
+  <link rel="stylesheet" href="./public/css/main.css">
+  <link rel="shortcut icon" href="./public/favicon.ico" type="image/x-icon">
+</head>
+<body>
+  <header>
+    <div class="logo-bar">
+      <a href="" onclick="() => {location.reload()}" ><img src="./public/Logo.svg" class="logo" alt="Logo Home Fantasy Box"></a>
+    </div>
+    <nav class="nav-bar">
+      <div></div>
+      <ul class="nav-list" id="navList">
+        <li>LIVROS</li>
+        <li>FILMES/SÉRIES</li>
+        <li>JOGOS</li>
+      </ul>
+      <div class="user-account" id="userLogout">
+        <span></span>
+        <button class="btn-logout" id="btnLogout">SAIR</button>
+      </div>
+    </nav>
+  </header>
+  <div id="app"></div>
+  <script type="module" src="client/main.js"></script>
+</body>
+</html>

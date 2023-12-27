@@ -1,7 +1,7 @@
 const books = `
   <main class="main-media">
     <button class="btn-new-media" id="btnAddNewBook">ADICIONAR NOVO</button>
-    <div class="mediaList" id="booksList">Lista de livros</div>
+    <div class="mediaList" id="booksList"></div>
   </main>  
 `
 

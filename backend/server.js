@@ -40,7 +40,6 @@ function verifyToken(token) {
         const decodedToken = jwt.verify(token, secretKey);
         return decodedToken;
     } catch (error) {
-        console.error('Erro ao verificar o token:', error);
         return null;
     }
 }
@@ -93,7 +92,26 @@ async function verifyLogin(username, password) {
 
 }
 
-function validaCampo(username, email, password) {
+async function addUserBook(username, newBook) {
+    try {
+        const filter = { username: username }; 
+        const update = { $push: { books: newBook } }; 
+        const result = await usersCollection.updateOne(filter, update);
+        console.log('Livro adicionado com sucesso') 
+
+    } catch(e) {console.error(e)}
+}
+
+async function loadUserBooks(username) {
+    try {
+        const filter = { username: username }; 
+        const result = await usersCollection.findOne(filter);
+        return result.books
+
+    } catch(e) {console.error(e)}
+}
+
+function validateFields(username, email, password) {
     let regexUsername = /^[a-zA-Z0-9_-]{5,20}$/
     let regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
     let regexPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
@@ -105,7 +123,7 @@ function validaCampo(username, email, password) {
     }
 }
 
-const app = http.createServer((req, res) => {
+const app = http.createServer(async (req, res) => {
     //CORS config
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, DELETE');
@@ -117,7 +135,7 @@ const app = http.createServer((req, res) => {
     }
     res.setHeader('Content-Type', 'application/json')
 
-
+    // Routes Config
     if(req.url === '/' && req.method === 'GET') {
         const receivedToken = req.headers.authorization.replace('Bearer ', '')
         if(receivedToken !== 'null') {
@@ -126,7 +144,7 @@ const app = http.createServer((req, res) => {
                 res.statusCode = 200
                 res.end(JSON.stringify({message: 'success', username: verifyTokenResult.username}))
             } else {
-                res.statusCode = 401
+                res.statusCode = 403
                 res.end(JSON.stringify({message: 'Not Auth Token'}))
             }
         } else {
@@ -143,7 +161,7 @@ const app = http.createServer((req, res) => {
 
         req.on('end', () => {
             const formData = JSON.parse(body)
-            let validation = validaCampo(
+            let validation = validateFields(
                 formData.usernameRegister, 
                 formData.emailRegister, 
                 formData.passwordRegister 
@@ -217,6 +235,57 @@ const app = http.createServer((req, res) => {
             
         })
     }
+    else if(req.url === '/books' && req.method === 'GET') {
+        const receivedToken = req.headers.authorization.replace('Bearer ', '')
+        if(receivedToken !== 'null') {
+            let verifyTokenResult = verifyToken(receivedToken)
+            if(verifyTokenResult) {
+                const books = await loadUserBooks(verifyTokenResult.username)
+                console.log(books)
+                res.statusCode = 200
+                res.end(JSON.stringify(books))
+            } else {
+                res.statusCode = 403
+                res.end(JSON.stringify({message: 'Not Auth Token'}))
+            }
+        } else {
+            res.statusCode = 200
+            res.end(JSON.stringify({message: 'No tokens yet'}))
+        }
+
+    }
+    else if(req.url === '/books' && req.method === 'POST') {
+        let verifyTokenResult
+        const receivedToken = req.headers.authorization.replace('Bearer ', '')
+        if(receivedToken !== 'null') {
+            verifyTokenResult = verifyToken(receivedToken)
+            if(!verifyTokenResult) {
+                res.statusCode = 403
+                res.end(JSON.stringify({message: 'Not Auth Token'}))
+            } 
+        } else {
+            res.statusCode = 401
+            res.end(JSON.stringify({message: 'No tokens received'}))
+        }
+
+        let body = ''
+        
+        req.on('data', chunk => {
+            body += chunk.toString()
+        })
+
+        req.on('end', async () => {
+            const formData = JSON.parse(body)
+                console.log('chegou aqui')
+
+            if(verifyTokenResult) {
+            addUserBook(verifyTokenResult.username, formData)
+            res.statusCode = 200
+            res.end(JSON.stringify({message: 'success', username: verifyTokenResult.username}))
+        }
+        })
+    }
+    
 })
 
 app.listen(port, () => {

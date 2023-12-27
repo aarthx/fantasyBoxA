@@ -4,7 +4,7 @@ import moviesPage from "./pages/movies.js"
 import gamesPage from "./pages/games.js"
 
 let app = document.getElementById('app')
-const settedToken = localStorage.getItem('token')
+let settedToken = localStorage.getItem('token')
 const navList = Array.from(document.getElementById('navList').children)
 const userLogout = document.getElementById('userLogout')
 const userSpan = userLogout.children[0]
@@ -77,20 +77,65 @@ async function booksLoad() {
   const modalNewBook = document.getElementById('modalNewBook')
   const btnFecharBook = document.getElementById('btnFecharBook')
   const overlay = document.getElementById('overlay')
+  const bookForm = document.getElementById('bookForm')
+  const booksList = document.getElementById('booksList')
   btnAddNewBook.addEventListener('click', () => toggleModal(modalNewBook))
   btnFecharBook.addEventListener('click', () => toggleModal(modalNewBook))
   overlay.addEventListener('click', () => toggleModal(modalNewBook))
+  bookForm.addEventListener('submit', addBook)
+  loadBooks(booksList)
 
-
-
-
-  // let actUser = userSpan.innerHTML
-  // let response = await fetch(`http://127.0.0.1:3000/${actUser}/books`)
-  // let data = await response.json()
   btnBooks.classList.add('active')
   btnMovies.classList.remove('active')
   btnGames.classList.remove('active')
 }
+
+async function addBook(e) {
+  e.preventDefault()
+  const formData = {}
+  const inputFields = e.target.querySelectorAll('input')
+  const textArea = e.target.querySelector('textarea')
+  inputFields.forEach(input => formData[input.name] = input.value)
+  formData[textArea.name] = textArea.value
+  settedToken = localStorage.getItem('token')
+  let response = await fetch('http://127.0.0.1:3000/books', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${settedToken}`,
+    },
+    body: JSON.stringify(formData)
+  })
+  let data = await response.json()
+}
+
+async function loadBooks(booksList) {
+  settedToken = localStorage.getItem('token')
+  let response = await fetch('http://127.0.0.1:3000/books', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${settedToken}`,
+    }
+  })
+  let data = await response.json()
+  console.log(data)
+  data.forEach(book => {
+    booksList.innerHTML += `
+    <div class="card">
+      <div class="img-container">
+        <img src=${book.bookURL}>
+      </div>
+      <div class="card-text">
+        <h2>${book.bookName}</h2>
+        <p>Nota: <b>${book.bookRate}</b><p>
+        <p class="card-desc">${book.bookDescription}</p>
+      </div>
+    </div>
+    `
+  })
+}
+
 
 function moviesLoad() {
   app.innerHTML = moviesPage
@@ -268,7 +313,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     })
     let data = await response.json()
-    if(response.status === 401 || data.message === 'No tokens yet') {
+    if(response.status === 403 || data.message === 'No tokens yet') {
       resetPage()
       homeLoad()
     }
@@ -277,6 +322,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       loginEvents()
     }
   
-  } catch(e) {}
+  } catch (e) {
+    console.log('Erro na autenticação do token:', e.message);
+  }
 })
 

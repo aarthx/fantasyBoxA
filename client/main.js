@@ -141,10 +141,8 @@ function gamesLoad() {
 async function addMedia(e, modal, category) {
   e.preventDefault()
   const formData = {}
-  const inputFields = e.target.querySelectorAll('input')
-  const textArea = e.target.querySelector('textarea')
+  const inputFields = e.target.querySelectorAll('input, textarea')
   inputFields.forEach(input => formData[input.name] = input.value)
-  formData[textArea.name] = textArea.value
   settedToken = localStorage.getItem('token')
   try {
     let response = await fetch(`http://${serverURL}:${serverPORT}/${category}`, {
@@ -281,8 +279,9 @@ async function loadUniqueMedia(mediaName, category) {
   editOverlay.classList.add('overlay')
   editOverlay.id = 'overlay'
   if(category === 'books') {
-    
-    const finalBookDate = new Date(data.bookDate)
+    let finalBookDate = new Date(data.bookDate)
+    const timeZoneOffsetMinutes = new Date().getTimezoneOffset();
+    finalBookDate = new Date(finalBookDate.getTime() + timeZoneOffsetMinutes * 60000);
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
     const formatter = new Intl.DateTimeFormat('pt-BR', options);
     const dateFormatted = formatter.format(finalBookDate);
@@ -293,12 +292,12 @@ async function loadUniqueMedia(mediaName, category) {
     btnEdit.innerHTML = 'EDITAR'
     const btnRemove = document.createElement('button')
     btnRemove.innerHTML = 'REMOVER'
+
     const modalNewMedia = document.createElement('div')
     modalNewMedia.classList.add('modal')
     modalNewMedia.id = 'modalEditBook'
     modalNewMedia.innerHTML = modalEditBook
     
- 
     btnDiv.appendChild(btnEdit)
     btnDiv.appendChild(btnRemove)
 
@@ -331,9 +330,8 @@ async function loadUniqueMedia(mediaName, category) {
     const btnFecharBook = document.getElementById('btnFecharBook')
     const editForm = document.getElementById('bookForm')
     const editInputs = editForm.querySelectorAll('input, select, textarea');
-
-    
     data.bookDate = dateFormatted.split('/').reverse().join('-')
+    
     btnRemove.addEventListener('click', () => removeMedia('books', data.bookName))
     btnEdit.addEventListener('click', () => {
       toggleModal(modalNewMedia)
@@ -342,11 +340,16 @@ async function loadUniqueMedia(mediaName, category) {
         input.value = data[inputName]
       })
     })
+    editForm.addEventListener('submit', (e) => {
+      editMedia(e, modalNewMedia, 'books', data.bookName)
+    })
     btnFecharBook.addEventListener('click', () => {toggleModal(modalNewMedia)})
     editOverlay.addEventListener('click', () => {toggleModal(modalNewMedia)})
 
   } else if(category === 'movies') {
-    const finalMovieDate = new Date(data.movieDate)
+    let finalMovieDate = new Date(data.movieDate)
+    const timeZoneOffsetMinutes = new Date().getTimezoneOffset();
+    finalMovieDate = new Date(finalMovieDate.getTime() + timeZoneOffsetMinutes * 60000);
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
     const formatter = new Intl.DateTimeFormat('pt-BR', options);
     const dateFormatted = formatter.format(finalMovieDate);
@@ -358,10 +361,13 @@ async function loadUniqueMedia(mediaName, category) {
     const btnRemove = document.createElement('button')
     btnRemove.innerHTML = 'REMOVER'
     
+    const modalNewMedia = document.createElement('div')
+    modalNewMedia.classList.add('modal')
+    modalNewMedia.id = 'modalEditMovie'
+    modalNewMedia.innerHTML = modalEditMovie
+
     btnDiv.appendChild(btnEdit)
     btnDiv.appendChild(btnRemove)
-    
-    btnRemove.addEventListener('click', () => removeMedia('movies', data.movieName))
 
     mainContent.innerHTML = `
       <div class="media-header">
@@ -385,8 +391,32 @@ async function loadUniqueMedia(mediaName, category) {
       </div>
     `
     mainContent.appendChild(btnDiv)
+    app.appendChild(mainContent)
+    app.appendChild(modalNewMedia)
+    app.appendChild(editOverlay)
+
+    const btnFecharMovie = document.getElementById('btnFecharMovie')
+    const editForm = document.getElementById('movieForm')
+    const editInputs = editForm.querySelectorAll('input, select, textarea');
+    data.movieDate = dateFormatted.split('/').reverse().join('-')
+    
+    btnRemove.addEventListener('click', () => removeMedia('movies', data.movieName))
+    btnEdit.addEventListener('click', () => {
+      toggleModal(modalNewMedia)
+      editInputs.forEach(input => {
+        const inputName = input.name
+        input.value = data[inputName]
+      })
+    })
+    editForm.addEventListener('submit', (e) => {
+      editMedia(e, modalNewMedia, 'movies', data.movieName)
+    })
+    btnFecharMovie.addEventListener('click', () => {toggleModal(modalNewMedia)})
+    editOverlay.addEventListener('click', () => {toggleModal(modalNewMedia)})
   } else if(category === 'games') {
-    const finalGameDate = new Date(data.gameDate)
+    let finalGameDate = new Date(data.gameDate)
+    const timeZoneOffsetMinutes = new Date().getTimezoneOffset();
+    finalGameDate = new Date(finalGameDate.getTime() + timeZoneOffsetMinutes * 60000);
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
     const formatter = new Intl.DateTimeFormat('pt-BR', options);
     const dateFormatted = formatter.format(finalGameDate);
@@ -398,10 +428,13 @@ async function loadUniqueMedia(mediaName, category) {
     const btnRemove = document.createElement('button')
     btnRemove.innerHTML = 'REMOVER'
     
+    const modalNewMedia = document.createElement('div')
+    modalNewMedia.classList.add('modal')
+    modalNewMedia.id = 'modalEditGame'
+    modalNewMedia.innerHTML = modalEditGame
+
     btnDiv.appendChild(btnEdit)
     btnDiv.appendChild(btnRemove)
-    
-    btnRemove.addEventListener('click', () => removeMedia('games', data.gameName))
 
     mainContent.innerHTML = `
       <div class="media-header">
@@ -426,9 +459,29 @@ async function loadUniqueMedia(mediaName, category) {
       </div>
     `
     mainContent.appendChild(btnDiv)
+    app.appendChild(mainContent)
+    app.appendChild(modalNewMedia)
+    app.appendChild(editOverlay)
 
-  }
-  
+    const btnFecharGame = document.getElementById('btnFecharGame')
+    const editForm = document.getElementById('gameForm')
+    const editInputs = editForm.querySelectorAll('input, select, textarea');
+    data.gameDate = dateFormatted.split('/').reverse().join('-')
+    
+    btnRemove.addEventListener('click', () => removeMedia('games', data.gameName))
+    btnEdit.addEventListener('click', () => {
+      toggleModal(modalNewMedia)
+      editInputs.forEach(input => {
+        const inputName = input.name
+        input.value = data[inputName]
+      })
+    })
+    editForm.addEventListener('submit', (e) => {
+      editMedia(e, modalNewMedia, 'games', data.gameName)
+    })
+    btnFecharGame.addEventListener('click', () => {toggleModal(modalNewMedia)})
+    editOverlay.addEventListener('click', () => {toggleModal(modalNewMedia)})
+  } 
 }
 
 async function loadMedia(list, category) {
@@ -514,6 +567,138 @@ async function removeMedia(category, mediaName) {
       location.reload()
     } catch(e) {console.error(e)}
   }
+}
+
+async function editMedia(e, modal ,category, mediaName) {
+  e.preventDefault()
+  try {
+    const formData = {}
+    const inputFields = e.target.querySelectorAll('input, textarea')
+    inputFields.forEach(input => formData[input.name] = input.value)
+    settedToken = localStorage.getItem('token')
+    formData.mediaName = mediaName
+    let response = await fetch(`http://${serverURL}:${serverPORT}/${category}/${mediaName}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${settedToken}`,
+      },
+      body: JSON.stringify(formData)
+    })
+    let data = await response.json()
+
+    if(data.message === 'success') {
+      toggleModal(modal)
+      if(category === 'books') {
+        await loadUniqueMedia(formData.bookName, 'books')
+      } else if (category === 'movies') {
+        await loadUniqueMedia(formData.movieName, 'movies')
+      } else if(category === 'games') {
+        await loadUniqueMedia(formData.gameName, 'games')
+      }
+      
+    } else if(data.message === 'error' && category === 'books') {
+      const bookErrorMessage = document.getElementById('bookErrorMessage')
+      bookErrorMessage.style.display = 'block'
+      bookErrorMessage.innerHTML = ''
+      if(data.invalids.includes('bookName')) {
+        bookErrorMessage.innerHTML += '* O nome do livro deve ter entre 1 e 50 caracteres<br>'
+      }
+      if(data.invalids.includes('bookAuthor')) {
+        bookErrorMessage.innerHTML += '* O autor do livro deve ter entre 1 e 50 caracteres<br>'
+      }
+      if(data.invalids.includes('bookURL')) {
+        bookErrorMessage.innerHTML += '* O link de imagem é inválido, tente outro<br>'
+      }
+      if(data.invalids.includes('bookGenre')) {
+        bookErrorMessage.innerHTML += '* O gênero do livro deve ter entre 1 e 50 caracteres<br>'
+      }
+      if(data.invalids.includes('bookYear')) {
+        bookErrorMessage.innerHTML += '* Ano de livro inválido<br>'
+      }
+      if(data.invalids.includes('bookDate')) {
+        bookErrorMessage.innerHTML += '* Data do livro inválida<br>'
+      }
+      if(data.invalids.includes('bookRate')) {
+        bookErrorMessage.innerHTML += '* A nota do livro deve ser de 0 a 10<br>'
+      }
+      if(data.invalids.includes('bookDescription')) {
+        bookErrorMessage.innerHTML += '* Os comentários do livro deve ter entre 1 e 500 caracteres<br>'
+      }
+      if(data.invalids.includes('validateRepeatedName')) {
+        bookErrorMessage.innerHTML += '* Já existe um livro com este nome cadastrado!<br>'
+      }
+    } else if(data.message === 'error' && category === 'movies') {
+      const movieErrorMessage = document.getElementById('movieErrorMessage')
+      movieErrorMessage.style.display = 'block'
+      movieErrorMessage.innerHTML = ''
+      if(data.invalids.includes('movieName')) {
+        movieErrorMessage.innerHTML += '* O nome do Filme/Série deve ter entre 1 e 50 caracteres<br>'
+      }
+      if(data.invalids.includes('movieDirector')) {
+        movieErrorMessage.innerHTML += '* O diretor do Filme/Série deve ter entre 1 e 50 caracteres<br>'
+      }
+      if(data.invalids.includes('movieURL')) {
+        movieErrorMessage.innerHTML += '* O link de imagem é inválido, tente outro<br>'
+      }
+      if(data.invalids.includes('movieGenre')) {
+        movieErrorMessage.innerHTML += '* O gênero do Filme/Série deve ter entre 1 e 50 caracteres<br>'
+      }
+      if(data.invalids.includes('movieYear')) {
+        movieErrorMessage.innerHTML += '* Ano de Filme/Série inválido<br>'
+      }
+      if(data.invalids.includes('movieDate')) {
+        movieErrorMessage.innerHTML += '* Data do Filme/Série inválida<br>'
+      }
+      if(data.invalids.includes('movieRate')) {
+        movieErrorMessage.innerHTML += '* A nota do Filme/Série deve ser de 0 a 10<br>'
+      }
+      if(data.invalids.includes('movieDescription')) {
+        movieErrorMessage.innerHTML += '* Os comentários do Filme/Série deve ter entre 1 e 500 caracteres<br>'
+      }
+      if(data.invalids.includes('validateRepeatedName')) {
+        movieErrorMessage.innerHTML += '* Já existe um filme/série com este nome cadastrado!<br>'
+      }
+    } else if(data.message === 'error' && category === 'games') {
+      const gameErrorMessage = document.getElementById('gameErrorMessage')
+      gameErrorMessage.style.display = 'block'
+      gameErrorMessage.innerHTML = ''
+      if(data.invalids.includes('gameName')) {
+        gameErrorMessage.innerHTML += '* O nome do Jogo deve ter entre 1 e 50 caracteres<br>'
+      }
+      if(data.invalids.includes('gameCompany')) {
+        gameErrorMessage.innerHTML += '* A empresa desenvolvedora do Jogo deve ter entre 1 e 50 caracteres<br>'
+      }
+      if(data.invalids.includes('gameURL')) {
+        gameErrorMessage.innerHTML += '* O link de imagem é inválido, tente outro<br>'
+      }
+      if(data.invalids.includes('gameGenre')) {
+        gameErrorMessage.innerHTML += '* O gênero do Jogo deve ter entre 1 e 50 caracteres<br>'
+      }
+      if(data.invalids.includes('gameDiff')) {
+        gameErrorMessage.innerHTML += '* A dificuldade do Jogo deve estar de 1 a 5<br>'
+      }
+      if(data.invalids.includes('gameTime')) {
+        gameErrorMessage.innerHTML += '* O tempo de Jogo deve estar de 0 a 52596000 minutos<br>'
+      }
+      if(data.invalids.includes('gameDate')) {
+        gameErrorMessage.innerHTML += '* Data do Jogo inválida<br>'
+      }
+      if(data.invalids.includes('gameConsole')) {
+        gameErrorMessage.innerHTML += '* O console utilizado deve ter entre 1 e 50 caracteres<br>'
+      }
+      if(data.invalids.includes('gameRate')) {
+        gameErrorMessage.innerHTML += '* A nota do Jogo deve ser de 0 a 10<br>'
+      }
+      if(data.invalids.includes('gameDescription')) {
+        gameErrorMessage.innerHTML += '* Os comentários do Jogo deve ter entre 1 e 500 caracteres<br>'
+      }
+      if(data.invalids.includes('validateRepeatedName')) {
+        gameErrorMessage.innerHTML += '* Já existe um jogo com este nome cadastrado!<br>'
+      }
+    }
+  } catch(e) {console.error(e)}
+
 }
 
 function loginLoad(username) {

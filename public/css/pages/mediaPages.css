@@ -83,6 +83,8 @@
 
 .card .card-text .card-desc {
   word-break: break-word;
+  max-height: 10rem;
+  overflow: auto;
 }
 
 .card .img-container {

@@ -49,7 +49,7 @@ const modalEditBook = `
       <textarea id="bookDescription" name="bookDescription" rows="4" cols="50" required></textarea>
 
       <div class="error-message" id="bookErrorMessage"></div>
-      <button type="submit" class="btn btn-submit">Add Livro</button>
+      <button type="submit" class="btn btn-submit">Editar Livro</button>
     </form>
 `
 
@@ -102,7 +102,7 @@ const modalEditMovie = `
       <textarea id="movieDescription" name="movieDescription" rows="4" cols="50" required></textarea>
 
       <div class="error-message" id="movieErrorMessage"></div>
-      <button type="submit" class="btn btn-submit">Add Filme</button>
+      <button type="submit" class="btn btn-submit">Editar Filme</button>
     </form>
 `
 
@@ -167,7 +167,7 @@ const modalEditGame = `
       <textarea id="gameDescription" name="gameDescription" rows="4" cols="50" required></textarea>
 
       <div class="error-message" id="gameErrorMessage"></div>
-      <button type="submit" class="btn btn-submit">Add Jogo</button>
+      <button type="submit" class="btn btn-submit">Editar Jogo</button>
     </form>
 `
 

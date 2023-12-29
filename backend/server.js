@@ -144,6 +144,18 @@ async function deleteUniqueMedia(username, mediaName , category) {
     } catch(e) {console.error(e)} 
 }
 
+async function editUniqueMedia(username, oldMediaName ,newMedia, category) {
+    let mediaNameString
+    if(category === 'books') mediaNameString = 'bookName'
+    if(category === 'movies') mediaNameString = 'movieName'
+    if(category === 'games') mediaNameString = 'gameName'
+    try {
+        const filter = { username: username, [`${category}.${mediaNameString}`]: oldMediaName }
+        const update = { $set: { [`${category}.$`]: newMedia } }
+        const resultOfEdit = await usersCollection.updateOne(filter, update)
+        return resultOfEdit
+    } catch(e) {console.error(e)} 
+}
 
 function validationRegister(username, email, password) {
     let regexUsername = /^[a-zA-Z0-9_-]{5,20}$/
@@ -424,6 +436,49 @@ const app = http.createServer(async (req, res) => {
             }
         })
     }
+    else if(req.url.startsWith('/books/') && req.method === 'PUT') {
+        let verifyTokenResult
+        const receivedToken = req.headers.authorization.replace('Bearer ', '')
+        if(receivedToken !== 'null') {
+            verifyTokenResult = verifyToken(receivedToken)
+            if(!verifyTokenResult) {
+                res.statusCode = 403
+                res.end(JSON.stringify({message: 'Not Auth Token'}))
+            } 
+        } else {
+            res.statusCode = 401
+            res.end(JSON.stringify({message: 'No tokens received'}))
+        }
+
+        let body = ''
+        
+        req.on('data', chunk => {
+            body += chunk.toString()
+        })
+
+        req.on('end', async () => {
+            const formData = JSON.parse(body)
+            formData.bookYear = parseInt(formData.bookYear)
+            formData.bookRate = parseInt(formData.bookRate)
+            formData.bookDate = new Date(formData.bookDate)
+            let oldMediaName = formData.mediaName
+            delete formData.mediaName
+            const bookValidation = await validationMedia(formData, 'books', verifyTokenResult.username)
+            if(formData.bookName === oldMediaName) {
+                bookValidation.validateRepeatedName = true
+            }
+            const validationOK = Object.values(bookValidation).every(val => val === true)
+            if(verifyTokenResult && validationOK) {
+                await editUniqueMedia(verifyTokenResult.username, oldMediaName, formData, 'books')
+                res.statusCode = 200
+                res.end(JSON.stringify({message: 'success', username: verifyTokenResult.username}))
+            } else {
+                const invalidInputs = Object.keys(bookValidation).filter(input => bookValidation[input] !== true);
+                res.statusCode = 400
+                res.end(JSON.stringify({message: 'error', invalids: invalidInputs}))
+            }
+        })
+    }
     else if(req.url.startsWith('/books/') && req.method === 'DELETE') {
         const receivedToken = req.headers.authorization.replace('Bearer ', '')
         if(receivedToken !== 'null') {
@@ -510,6 +565,49 @@ const app = http.createServer(async (req, res) => {
 
             if(verifyTokenResult && validationOK) {
                 addUserMedia(verifyTokenResult.username, formData, 'movies')
+                res.statusCode = 200
+                res.end(JSON.stringify({message: 'success', username: verifyTokenResult.username}))
+            } else {
+                const invalidInputs = Object.keys(movieValidation).filter(input => movieValidation[input] !== true);
+                res.statusCode = 400
+                res.end(JSON.stringify({message: 'error', invalids: invalidInputs}))
+            }
+        })
+    }
+    else if(req.url.startsWith('/movies/') && req.method === 'PUT') {
+        let verifyTokenResult
+        const receivedToken = req.headers.authorization.replace('Bearer ', '')
+        if(receivedToken !== 'null') {
+            verifyTokenResult = verifyToken(receivedToken)
+            if(!verifyTokenResult) {
+                res.statusCode = 403
+                res.end(JSON.stringify({message: 'Not Auth Token'}))
+            } 
+        } else {
+            res.statusCode = 401
+            res.end(JSON.stringify({message: 'No tokens received'}))
+        }
+
+        let body = ''
+        
+        req.on('data', chunk => {
+            body += chunk.toString()
+        })
+
+        req.on('end', async () => {
+            const formData = JSON.parse(body)
+            formData.movieYear = parseInt(formData.movieYear)
+            formData.movieRate = parseInt(formData.movieRate)
+            formData.movieDate = new Date(formData.movieDate)
+            let oldMediaName = formData.mediaName
+            delete formData.mediaName
+            const movieValidation = await validationMedia(formData, 'movies', verifyTokenResult.username)
+            if(formData.movieName === oldMediaName) {
+                movieValidation.validateRepeatedName = true
+            }
+            const validationOK = Object.values(movieValidation).every(val => val === true)
+            if(verifyTokenResult && validationOK) {
+                await editUniqueMedia(verifyTokenResult.username, oldMediaName, formData, 'movies')
                 res.statusCode = 200
                 res.end(JSON.stringify({message: 'success', username: verifyTokenResult.username}))
             } else {
@@ -607,6 +705,51 @@ const app = http.createServer(async (req, res) => {
 
             if(verifyTokenResult && validationOK) {
                 addUserMedia(verifyTokenResult.username, formData, 'games')
+                res.statusCode = 200
+                res.end(JSON.stringify({message: 'success', username: verifyTokenResult.username}))
+            } else {
+                const invalidInputs = Object.keys(gameValidation).filter(input => gameValidation[input] !== true);
+                res.statusCode = 400
+                res.end(JSON.stringify({message: 'error', invalids: invalidInputs}))
+            }
+        })
+    }
+    else if(req.url.startsWith('/games/') && req.method === 'PUT') {
+        let verifyTokenResult
+        const receivedToken = req.headers.authorization.replace('Bearer ', '')
+        if(receivedToken !== 'null') {
+            verifyTokenResult = verifyToken(receivedToken)
+            if(!verifyTokenResult) {
+                res.statusCode = 403
+                res.end(JSON.stringify({message: 'Not Auth Token'}))
+            } 
+        } else {
+            res.statusCode = 401
+            res.end(JSON.stringify({message: 'No tokens received'}))
+        }
+
+        let body = ''
+        
+        req.on('data', chunk => {
+            body += chunk.toString()
+        })
+
+        req.on('end', async () => {
+            const formData = JSON.parse(body)
+            formData.gameDiff = parseInt(formData.gameDiff)
+            formData.gameTime = parseInt(formData.gameTime)
+            formData.gameRate = parseInt(formData.gameRate)
+            formData.gameDate = new Date(formData.gameDate)
+            let oldMediaName = formData.mediaName
+            delete formData.mediaName
+            const gameValidation = await validationMedia(formData, 'games', verifyTokenResult.username)
+            if(formData.gameName === oldMediaName) {
+                gameValidation.validateRepeatedName = true
+            }
+            const validationOK = Object.values(gameValidation).every(val => val === true)
+
+            if(verifyTokenResult && validationOK) {
+                await editUniqueMedia(verifyTokenResult.username, oldMediaName, formData, 'games')
                 res.statusCode = 200
                 res.end(JSON.stringify({message: 'success', username: verifyTokenResult.username}))
             } else {

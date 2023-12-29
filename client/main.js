@@ -2,6 +2,8 @@ import homePage from "./pages/home.js"
 import booksPage from './pages/books.js'
 import moviesPage from "./pages/movies.js"
 import gamesPage from "./pages/games.js"
+import editModals from "./pages/editModals.js"
+const {modalEditBook, modalEditMovie, modalEditGame, overlayEdit} = editModals
 
 let app = document.getElementById('app')
 let settedToken = localStorage.getItem('token')
@@ -22,7 +24,7 @@ function logout() {
 }
 
 function toggleModal(modal) {
-  let display = window.getComputedStyle(modal).getPropertyValue('display')
+  let display = window.getComputedStyle(modal).getPropertyValue('display') 
   let displayOverlay = window.getComputedStyle(overlay).getPropertyValue('display')
   const errMSG = document.querySelector('.error-message')
   const spansError = document.querySelectorAll('#registerForm span')
@@ -274,6 +276,10 @@ async function loadUniqueMedia(mediaName, category) {
   })
   let data = await response.json()
   let mainContent = document.querySelector('.main-media')
+  app.innerHTML = ''
+  const editOverlay = document.createElement('div')
+  editOverlay.classList.add('overlay')
+  editOverlay.id = 'overlay'
   if(category === 'books') {
     
     const finalBookDate = new Date(data.bookDate)
@@ -287,11 +293,14 @@ async function loadUniqueMedia(mediaName, category) {
     btnEdit.innerHTML = 'EDITAR'
     const btnRemove = document.createElement('button')
     btnRemove.innerHTML = 'REMOVER'
+    const modalNewMedia = document.createElement('div')
+    modalNewMedia.classList.add('modal')
+    modalNewMedia.id = 'modalEditBook'
+    modalNewMedia.innerHTML = modalEditBook
     
+ 
     btnDiv.appendChild(btnEdit)
     btnDiv.appendChild(btnRemove)
-    
-    btnRemove.addEventListener('click', () => removeMedia('books', data.bookName))
 
     mainContent.innerHTML = `
       <div class="media-header">
@@ -315,6 +324,27 @@ async function loadUniqueMedia(mediaName, category) {
       </div>
     `
     mainContent.appendChild(btnDiv)
+    app.appendChild(mainContent)
+    app.appendChild(modalNewMedia)
+    app.appendChild(editOverlay)
+
+    const btnFecharBook = document.getElementById('btnFecharBook')
+    const editForm = document.getElementById('bookForm')
+    const editInputs = editForm.querySelectorAll('input, select, textarea');
+
+    
+    data.bookDate = dateFormatted.split('/').reverse().join('-')
+    btnRemove.addEventListener('click', () => removeMedia('books', data.bookName))
+    btnEdit.addEventListener('click', () => {
+      toggleModal(modalNewMedia)
+      editInputs.forEach(input => {
+        const inputName = input.name
+        input.value = data[inputName]
+      })
+    })
+    btnFecharBook.addEventListener('click', () => {toggleModal(modalNewMedia)})
+    editOverlay.addEventListener('click', () => {toggleModal(modalNewMedia)})
+
   } else if(category === 'movies') {
     const finalMovieDate = new Date(data.movieDate)
     const options = { day: '2-digit', month: '2-digit', year: 'numeric' };

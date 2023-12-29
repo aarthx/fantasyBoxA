@@ -82,7 +82,7 @@
 }
 
 .card .card-text .card-desc {
-  word-break: break-all;
+  word-break: break-word;
 }
 
 .card .img-container {

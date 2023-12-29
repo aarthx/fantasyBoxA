@@ -1,5 +1,6 @@
+const overlayEdit = `<div class="overlay" id="overlay"></div>`
+
 const modalEditBook = `
-  <div class="modal" id="modalEditBook">
     <div class="modal-header">
       <div></div>
       <div>Editar Livro</div>
@@ -11,7 +12,7 @@ const modalEditBook = `
       <div class="two-inputs">
         <div class="label-input">
           <label for="bookAuthor">Autor</label>
-          <input type="text" id="bookAuthor" name="bookAuthor" class="half" required>
+          <input type="text" id="bookAuthor" name="bookAuthor" class="half" required value="teste">
         </div>
 
         <div class="label-input">
@@ -50,11 +51,9 @@ const modalEditBook = `
       <div class="error-message" id="bookErrorMessage"></div>
       <button type="submit" class="btn btn-submit">Add Livro</button>
     </form>
-  </div>
 `
 
 const modalEditMovie = `
-  <div class="modal" id="modalEditMovie">
     <div class="modal-header">
       <div></div>
       <div>Editar Filme/Série</div>
@@ -105,11 +104,9 @@ const modalEditMovie = `
       <div class="error-message" id="movieErrorMessage"></div>
       <button type="submit" class="btn btn-submit">Add Filme</button>
     </form>
-  </div>
 `
 
 const modalEditGame = `
-  <div class="modal" id="modalEditGame">
     <div class="modal-header">
       <div></div>
       <div>Editar Jogo</div>
@@ -172,7 +169,10 @@ const modalEditGame = `
       <div class="error-message" id="gameErrorMessage"></div>
       <button type="submit" class="btn btn-submit">Add Jogo</button>
     </form>
-  </div>
 `
 
-export default {modalEditBook, modalEditMovie, modalEditGame}
+
+const editModals = {modalEditBook, modalEditMovie, modalEditGame, overlayEdit}
+
+export default editModals
+

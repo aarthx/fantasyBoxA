@@ -1,7 +1,7 @@
 const movies = `
   <main class="main-media">
     <button class="btn-new-media" id="btnAddNewMovie">ADICIONAR NOVO</button>
-    <div class="mediaList" id="moviesList">Lista de filmes</div>
+    <div class="mediaList" id="moviesList"></div>
   </main>  
 `
 
@@ -54,6 +54,7 @@ const modalNewMovie = `
       <label for="movieDescription">Comentários</label>
       <textarea id="movieDescription" name="movieDescription" rows="4" cols="50" required></textarea>
 
+      <div class="error-message" id="movieErrorMessage"></div>
       <button type="submit" class="btn btn-submit">Add Filme</button>
     </form>
   </div>

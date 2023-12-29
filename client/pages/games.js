@@ -1,7 +1,7 @@
 const games = `
   <main class="main-media">
     <button class="btn-new-media" id="btnAddNewGame">ADICIONAR NOVO</button>
-    <div class="mediaList" id="gamesList">Lista de jogos</div>
+    <div class="mediaList" id="gamesList"></div>
   </main>  
 `
 
@@ -66,6 +66,7 @@ const modalNewGame = `
       <label for="gameDescription">Comentários</label>
       <textarea id="gameDescription" name="gameDescription" rows="4" cols="50" required></textarea>
 
+      <div class="error-message" id="gameErrorMessage"></div>
       <button type="submit" class="btn btn-submit">Add Jogo</button>
     </form>
   </div>

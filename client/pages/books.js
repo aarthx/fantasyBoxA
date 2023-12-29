@@ -54,6 +54,7 @@ const modalNewBook = `
       <label for="bookDescription">Comentários</label>
       <textarea id="bookDescription" name="bookDescription" rows="4" cols="50" required></textarea>
 
+      <div class="error-message" id="bookErrorMessage"></div>
       <button type="submit" class="btn btn-submit">Add Livro</button>
     </form>
   </div>

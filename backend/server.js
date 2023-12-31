@@ -7,7 +7,7 @@ const crypto = require('crypto');
 const secretKey = crypto.randomBytes(32).toString('hex');
 const hostname = '127.0.0.1'
 const port = 3000
-const mongoURL = 'mongodb+srv://fantasyBoxAdm:v9n1Y6R6KKOQoFXo@blogapp-prod.mpk225h.mongodb.net/?retryWrites=true&w=majority'
+const mongoURL = 'segredo'
 
 const client = new MongoClient(mongoURL);
 async function mongoConnect() {
